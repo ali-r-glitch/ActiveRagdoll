@@ -488,8 +488,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58556935dad40549be8e5121ef18346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1779511314}
-  speed: 5
 --- !u!1 &855986719 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6932946186775204904, guid: 0be4e1c6b7e874042a041c429a847e87, type: 3}
@@ -900,8 +898,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e58556935dad40549be8e5121ef18346, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 1779511314}
-  speed: 5
 --- !u!1 &1016564106 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4079403022814115752, guid: 0be4e1c6b7e874042a041c429a847e87, type: 3}
@@ -1505,7 +1501,7 @@ MonoBehaviour:
   head: {fileID: 1016564108}
   _bleftarm: 0
   _brightarm: 0
-  upforce: 110
+  upforce: 115
   downforce: 15
   handmovement: 0
 --- !u!4 &1796325261
