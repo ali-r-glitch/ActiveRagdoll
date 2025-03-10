@@ -10,16 +10,18 @@ public class secondFOrces : MonoBehaviour
     private float handipforce;
     private float leftlegdownforceforce;
     private float rightlegdownforceforce;
-
+    Rigidbody Mousehand;
     public Rigidbody rightarm;
     public Rigidbody leftarm;
     public Rigidbody rightfoot;
     public Rigidbody leftfoot;
     public Rigidbody spine;
-
+    
     private bool _brightarm = false;
     private bool _bleftarm = false;
 
+    [SerializeField] private float followForce= 50f;
+    [SerializeField] float maxDistance = 2f;
     void Start()
     {
         totaldownforce = totalupforce;
@@ -32,7 +34,45 @@ public class secondFOrces : MonoBehaviour
     {
         HandleInput();
         ApplyForces();
+        MouseMOvement();
     }
+
+    private void MouseMOvement()
+    {
+        if (_brightarm)
+            Mousehand = rightarm;
+        else if (_bleftarm)
+            Mousehand = leftarm;
+        else
+            Mousehand = null;
+
+        if (Mousehand != null)
+        {
+            // Get target position from mouse
+            Vector3 mousePos = Input.mousePosition;
+            Vector3 targetPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z)));
+
+            // Calculate direction vector
+            Vector3 direction = targetPos - Mousehand.position;
+
+            // Option 1: Smooth force toward target (physics friendly)
+              // You can tweak this value to make it stronger/weaker
+            Mousehand.AddForce(direction * followForce, ForceMode.Force);
+
+            // Option 2 (Alternative): Set velocity directly for smoother movement (optional to try)
+            // float moveSpeed = 10f; // Adjust speed
+            // Mousehand.velocity = direction * moveSpeed;
+
+            // Optional: Limit distance to avoid overstretching
+            // Max distance hand can be from body/shoulder
+            if (direction.magnitude > maxDistance)
+            {
+                direction = direction.normalized * maxDistance;
+                Mousehand.position = Mousehand.position + direction;
+            }
+        }
+    }
+
 
     void HandleInput()
     {
