@@ -51,6 +51,10 @@ public class secondFOrces : MonoBehaviour
             Mousehand = rightarm;
         else if (_bleftarm)
             Mousehand = leftarm;
+        else if (_brightleg)
+            Mousehand = rightfoot;
+        else if (_bleftleg)
+            Mousehand = leftfoot;
         else
             Mousehand = null;
 
@@ -82,6 +86,8 @@ public class secondFOrces : MonoBehaviour
             _bleftarm = !_bleftarm;
             calculateRatio();
             DebugState("Pressed A");
+
+            maxDistance = 0.03f;
         }
 
         // Right Arm
@@ -91,6 +97,7 @@ public class secondFOrces : MonoBehaviour
             _brightarm = !_brightarm;
             calculateRatio();
             DebugState("Pressed D");
+            maxDistance = 0.03f;
         }
 
         // Right Leg
@@ -100,6 +107,7 @@ public class secondFOrces : MonoBehaviour
             _brightleg = !_brightleg;
             calculateRatio();
             DebugState("Pressed W");
+            maxDistance = 0.06f;
         }
 
         // Left Leg
@@ -109,6 +117,7 @@ public class secondFOrces : MonoBehaviour
             _bleftleg = !_bleftleg;
             calculateRatio();
             DebugState("Pressed S");
+            maxDistance = 0.06f;
         }
     }
 
@@ -175,16 +184,16 @@ public class secondFOrces : MonoBehaviour
         if (_brightleg)
         {
             legupforce = totalupforce * 0.2f;
-            rightlegdownforceforce = totaldownforce * 0.3f;
-            leftlegdownforceforce = totaldownforce * 1.7f;
+            rightlegdownforceforce = totaldownforce * 0.5f;
+            leftlegdownforceforce = totaldownforce * 1.5f;
         }
 
         // Left leg active
         if (_bleftleg)
         {
             legupforce = totalupforce * 0.2f;
-            leftlegdownforceforce = totaldownforce * 0.3f;
-            rightlegdownforceforce = totaldownforce * 1.7f;
+            leftlegdownforceforce = totaldownforce * 0.5f;
+            rightlegdownforceforce = totaldownforce * 1.5f;
         }
     }
 
