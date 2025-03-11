@@ -3368,6 +3368,8 @@ MonoBehaviour:
   rightfoot: {fileID: 1130791211}
   leftfoot: {fileID: 1853354920}
   spine: {fileID: 1016564108}
+  rightthigh: {fileID: 1970906491}
+  leftthigh: {fileID: 1453183361}
   followForce: 0.45
   maxDistance: 0.005
 --- !u!1 &1831661341 stripped

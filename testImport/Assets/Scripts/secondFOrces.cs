@@ -10,18 +10,26 @@ public class secondFOrces : MonoBehaviour
     private float handipforce;
     private float leftlegdownforceforce;
     private float rightlegdownforceforce;
+    private float legupforce;
+
     Rigidbody Mousehand;
+
     public Rigidbody rightarm;
     public Rigidbody leftarm;
     public Rigidbody rightfoot;
     public Rigidbody leftfoot;
     public Rigidbody spine;
-    
+    public Rigidbody rightthigh;
+    public Rigidbody leftthigh;
+
     private bool _brightarm = false;
     private bool _bleftarm = false;
+    private bool _brightleg = false;
+    private bool _bleftleg = false;
 
-    [SerializeField] private float followForce= 50f;
-    [SerializeField] float maxDistance = 2f;
+    [SerializeField] private float followForce = 50f;
+    [SerializeField] private float maxDistance = 2f;
+
     void Start()
     {
         totaldownforce = totalupforce;
@@ -48,23 +56,15 @@ public class secondFOrces : MonoBehaviour
 
         if (Mousehand != null)
         {
-            // Get target position from mouse
             Vector3 mousePos = Input.mousePosition;
             Vector3 targetPos = Camera.main.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, Mathf.Abs(Camera.main.transform.position.z)));
 
-            // Calculate direction vector
             Vector3 direction = targetPos - Mousehand.position;
 
-            // Option 1: Smooth force toward target (physics friendly)
-              // You can tweak this value to make it stronger/weaker
+            // Add smooth following force
             Mousehand.AddForce(direction * followForce, ForceMode.Force);
 
-            // Option 2 (Alternative): Set velocity directly for smoother movement (optional to try)
-            // float moveSpeed = 10f; // Adjust speed
-            // Mousehand.velocity = direction * moveSpeed;
-
-            // Optional: Limit distance to avoid overstretching
-            // Max distance hand can be from body/shoulder
+            // Limit distance
             if (direction.magnitude > maxDistance)
             {
                 direction = direction.normalized * maxDistance;
@@ -73,61 +73,123 @@ public class secondFOrces : MonoBehaviour
         }
     }
 
-
     void HandleInput()
     {
+        // Left Arm
         if (Input.GetKeyDown(KeyCode.A))
         {
-            DebugState("Pressed A");
-            if (_brightarm) _brightarm = false;
+            ResetSelection();
             _bleftarm = !_bleftarm;
             calculateRatio();
-           
+            DebugState("Pressed A");
         }
 
+        // Right Arm
         if (Input.GetKeyDown(KeyCode.D))
         {
-            DebugState("Pressed D");
-            if (_bleftarm) _bleftarm = false;
+            ResetSelection();
             _brightarm = !_brightarm;
             calculateRatio();
-           
+            DebugState("Pressed D");
         }
+
+        // Right Leg
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ResetSelection();
+            _brightleg = !_brightleg;
+            calculateRatio();
+            DebugState("Pressed W");
+        }
+
+        // Left Leg
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            ResetSelection();
+            _bleftleg = !_bleftleg;
+            calculateRatio();
+            DebugState("Pressed S");
+        }
+    }
+
+    void ResetSelection()
+    {
+        _brightarm = false;
+        _bleftarm = false;
+        _brightleg = false;
+        _bleftleg = false;
     }
 
     void ApplyForces()
     {
+        // Arms
         if (_brightarm)
-        {
             rightarm.AddForce(transform.up * handipforce, ForceMode.Acceleration);
-        }
 
         if (_bleftarm)
-        {
             leftarm.AddForce(transform.up * handipforce, ForceMode.Acceleration);
+
+        // Legs
+        if (_brightleg)
+        {
+            rightthigh.AddForce(transform.up * legupforce, ForceMode.Acceleration); // Thigh up
+            rightfoot.AddForce(-transform.up * rightlegdownforceforce, ForceMode.Acceleration); // Foot down
+            leftfoot.AddForce(-transform.up * leftlegdownforceforce, ForceMode.Acceleration); 
         }
 
+        if (_bleftleg)
+        {
+            leftthigh.AddForce(transform.up * legupforce, ForceMode.Acceleration); // Thigh up
+            leftfoot.AddForce(-transform.up * leftlegdownforceforce, ForceMode.Acceleration); // Foot down
+            rightfoot.AddForce(-transform.up * rightlegdownforceforce, ForceMode.Acceleration); // Foot down
+        }
+
+        // General body support
         spine.AddForce(transform.up * headupforce, ForceMode.Acceleration);
-        leftfoot.AddForce(-transform.up * leftlegdownforceforce, ForceMode.Acceleration);
-        rightfoot.AddForce(-transform.up * rightlegdownforceforce, ForceMode.Acceleration);
+
+        // Balancing feet when no legs selected
+        if (!_brightleg && !_bleftleg)
+        {
+            leftfoot.AddForce(-transform.up * totaldownforce, ForceMode.Acceleration);
+            rightfoot.AddForce(-transform.up * totaldownforce, ForceMode.Acceleration);
+        }
     }
 
     private void calculateRatio()
     {
+        // Reset
+        handipforce = 0;
+        legupforce = 0;
+        headupforce = totalupforce;
+        leftlegdownforceforce = totaldownforce;
+        rightlegdownforceforce = totaldownforce;
+
+        // Arms active
         if (_brightarm || _bleftarm)
         {
             handipforce = totalupforce * 0.2f;
             headupforce = totalupforce * 0.8f;
         }
-        else
+
+        // Right leg active
+        if (_brightleg)
         {
-            handipforce = 0;
-            headupforce = totalupforce;
+            legupforce = totalupforce * 0.2f;
+            rightlegdownforceforce = totaldownforce * 0.3f;
+            leftlegdownforceforce = totaldownforce * 1.7f;
+        }
+
+        // Left leg active
+        if (_bleftleg)
+        {
+            legupforce = totalupforce * 0.2f;
+            leftlegdownforceforce = totaldownforce * 0.3f;
+            rightlegdownforceforce = totaldownforce * 1.7f;
         }
     }
 
     private void DebugState(string action)
     {
-        Debug.Log($"Action: {action} | _brightarm: {_brightarm} | _bleftarm: {_bleftarm} | handipforce: {handipforce} | headupforce: {headupforce}");
+        Debug.Log($"Action: {action} | _brightarm: {_brightarm} | _bleftarm: {_bleftarm} | _brightleg: {_brightleg} | _bleftleg: {_bleftleg} | handipforce: {handipforce} | legupforce: {legupforce} | headupforce: {headupforce}");
     }
 }
