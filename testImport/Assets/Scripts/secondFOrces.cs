@@ -107,7 +107,7 @@ public class secondFOrces : MonoBehaviour
             _brightleg = !_brightleg;
             calculateRatio();
             DebugState("Pressed W");
-            maxDistance = 0.06f;
+            maxDistance = 0.04f;
         }
 
         // Left Leg
@@ -117,7 +117,7 @@ public class secondFOrces : MonoBehaviour
             _bleftleg = !_bleftleg;
             calculateRatio();
             DebugState("Pressed S");
-            maxDistance = 0.06f;
+            maxDistance = 0.04f;
         }
     }
 
