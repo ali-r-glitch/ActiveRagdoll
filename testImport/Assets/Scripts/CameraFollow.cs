@@ -20,11 +20,11 @@ public class CameraFollow : MonoBehaviour
     // Rotate the camera around the player when pressing Q and E
     private void HandleRotationInput()
     {
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.W))
         {
             currentAngle -= rotationSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.S))
         {
             currentAngle += rotationSpeed * Time.deltaTime;
         }

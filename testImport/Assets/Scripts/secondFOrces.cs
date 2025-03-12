@@ -29,6 +29,7 @@ public class secondFOrces : MonoBehaviour
 
     [SerializeField] private float followForce = 50f;
     [SerializeField] private float maxDistance = 2f;
+    private float temppaxdistance;
 
     void Start()
     {
@@ -36,6 +37,7 @@ public class secondFOrces : MonoBehaviour
         leftlegdownforceforce = totaldownforce;
         rightlegdownforceforce = leftlegdownforceforce;
         headupforce = totalupforce;
+        temppaxdistance = maxDistance;
     }
 
     void Update()
@@ -87,7 +89,7 @@ public class secondFOrces : MonoBehaviour
             calculateRatio();
             DebugState("Pressed A");
 
-            maxDistance = 0.03f;
+            maxDistance = temppaxdistance;
         }
 
         // Right Arm
@@ -97,27 +99,27 @@ public class secondFOrces : MonoBehaviour
             _brightarm = !_brightarm;
             calculateRatio();
             DebugState("Pressed D");
-            maxDistance = 0.03f;
+            maxDistance =temppaxdistance;
         }
 
         // Right Leg
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             ResetSelection();
             _brightleg = !_brightleg;
             calculateRatio();
-            DebugState("Pressed W");
-            maxDistance = 0.04f;
+            DebugState("Pressed e");
+            maxDistance = temppaxdistance*1.5f;
         }
 
         // Left Leg
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             ResetSelection();
             _bleftleg = !_bleftleg;
             calculateRatio();
-            DebugState("Pressed S");
-            maxDistance = 0.04f;
+            DebugState("Pressed q");
+            maxDistance =temppaxdistance*1.5f;
         }
     }
 
